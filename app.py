@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
@@ -9,6 +10,8 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
+
+load_dotenv()  # load environment variables from .env file
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -52,6 +55,7 @@ def get_conversation_chain(vectorstore):
 
 
 def handle_userinput(user_question):
+    modified_question = "Answer in extreme detail, make sure not to use jargon and to be concise but detailed and technical, assume you are talking to an extremely well educated attornery. Also remove any introductory text in your answer, answer should be technical and site names, dates, relevant cases, etc, always reference sources in line dont just summarize, the question is as follows:" + user_question
     response = st.session_state.conversation({'question': user_question})
     st.session_state.chat_history = response['chat_history']
 
@@ -62,11 +66,13 @@ def handle_userinput(user_question):
         else:
             st.write(bot_template.replace(
                 "{{MSG}}", message.content), unsafe_allow_html=True)
+            if 'metadata' in message and 'source' in message.metadata:
+                st.write(f"Source: {message.metadata['source']}")
 
 
 def main():
     load_dotenv()
-    st.set_page_config(page_title="Chat with multiple PDFs",
+    st.set_page_config(page_title="Litt-igation",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
 
@@ -74,8 +80,10 @@ def main():
         st.session_state.conversation = None
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = None
+    if "processed" not in st.session_state:
+        st.session_state.processed = False
 
-    st.header("Chat with multiple PDFs :books:")
+    st.header("Litt-igation")
     user_question = st.text_input("Ask a question about your documents:")
     if user_question:
         handle_userinput(user_question)
@@ -98,7 +106,16 @@ def main():
                 # create conversation chain
                 st.session_state.conversation = get_conversation_chain(
                     vectorstore)
+                
+                # Set processed flag
+                st.session_state.processed = True
+
+    # Check processed flag and display confirmation message
+    if st.session_state.processed:
+        st.success("Documents uploaded successfully! ✅")
 
 
 if __name__ == '__main__':
     main()
+
+
