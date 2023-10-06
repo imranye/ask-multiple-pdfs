@@ -7,10 +7,11 @@ css = '''
     background-color: #2b313e
 }
 .chat-message.bot {
-    background-color: #475063
+    background-color: #475063;
+    border: 2px solid #7D3C98;
 }
 .chat-message .avatar {
-  width: 20%;
+  width: 5%;
 }
 .chat-message .avatar img {
   max-width: 78px;
