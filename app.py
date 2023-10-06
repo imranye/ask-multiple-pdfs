@@ -84,9 +84,9 @@ def main():
         st.session_state.processed = False
 
     st.header("Litt-igation")
-    user_question = st.text_input("Ask a question about your documents:")
-    if user_question:
-        handle_userinput(user_question)
+    
+    if not st.session_state.processed:
+        st.write("Please upload a document to get started.")
 
     with st.sidebar:
         st.subheader("Your documents")
@@ -113,7 +113,9 @@ def main():
     # Check processed flag and display confirmation message
     if st.session_state.processed:
         st.success("Documents uploaded successfully! ✅")
-
+        user_question = st.text_input("Ask a question about your documents:")
+        if st.button("Submit") or user_question:
+            handle_userinput(user_question)
 
 if __name__ == '__main__':
     main()
