@@ -13,4 +13,4 @@ python-docx==0.8.11
 
 # uncomment to use instructor embeddings
 # InstructorEmbedding==1.0.1
-# sentence-transformers==2.2.2
+# sentence-transformers==2.2.23
