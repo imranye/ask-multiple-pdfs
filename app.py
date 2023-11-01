@@ -72,7 +72,7 @@ def handle_userinput(user_question):
 
 def main():
     load_dotenv()
-    st.set_page_config(page_title="Litt-igation",
+    st.set_page_config(page_title="WNJ-GPT",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
 
@@ -83,7 +83,7 @@ def main():
     if "processed" not in st.session_state:
         st.session_state.processed = False
 
-    st.header("Litt-igation")
+    st.header("WNJ-GPT")
     
     if not st.session_state.processed:
         st.write("Please upload a document to get started.")
