@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
+from docx import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
@@ -13,6 +14,14 @@ from langchain.llms import HuggingFaceHub
 
 load_dotenv()  # load environment variables from .env file
 
+def get_doc_text(doc_files):
+    text = ""
+    for doc in doc_files:
+        doc_reader = Document(doc)
+        for para in doc_reader.paragraphs:
+            text += para.text
+    return text
+
 def get_pdf_text(pdf_docs):
     text = ""
     for pdf in pdf_docs:
@@ -21,6 +30,10 @@ def get_pdf_text(pdf_docs):
             text += page.extract_text()
     return text
 
+def upload_files():
+    doc_files = st.file_uploader("Upload DOCX", type=['docx'], accept_multiple_files=True)
+    pdf_docs = st.file_uploader("Upload PDF", type=['pdf'], accept_multiple_files=True)
+    return doc_files, pdf_docs
 
 def get_text_chunks(text):
     text_splitter = CharacterTextSplitter(
@@ -90,11 +103,15 @@ def main():
 
     st.subheader("Your documents")
     pdf_docs = st.file_uploader(
-        "Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
+        "Upload your PDFs here and click on 'Process'", accept_multiple_files=True, type=['pdf'])
+    docx_docs = st.file_uploader(
+        "Upload your DOCX files here and click on 'Process'", accept_multiple_files=True, type=['docx'])
     if st.button("Process"):
         with st.spinner("Processing"):
             # get pdf text
             raw_text = get_pdf_text(pdf_docs)
+            # get docx text
+            raw_text += get_doc_text(docx_docs)
 
             # get the text chunks
             text_chunks = get_text_chunks(raw_text)
@@ -118,5 +135,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
