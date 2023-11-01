@@ -31,8 +31,7 @@ def get_pdf_text(pdf_docs):
     return text
 
 def upload_files():
-    doc_files = st.file_uploader("Upload DOCX", type=['docx'], accept_multiple_files=True)
-    pdf_docs = st.file_uploader("Upload PDF", type=['pdf'], accept_multiple_files=True)
+    doc_files = st.file_uploader("Upload DOCX", type=['docx', 'docx'], accept_multiple_files=True)
     return doc_files, pdf_docs
 
 def get_text_chunks(text):
@@ -98,16 +97,16 @@ def main():
 
     st.header("WNJ-GPT")
     
-    if not st.session_state.processed:
-        st.write("Please upload a document to get started.")
+    # if not st.session_state.processed:
+    #     st.write("Please upload a document to get started.")
 
     st.subheader("Your documents")
-    pdf_docs = st.file_uploader(
-        "Upload your PDFs here and click on 'Process'", accept_multiple_files=True, type=['pdf'])
-    docx_docs = st.file_uploader(
-        "Upload your DOCX files here and click on 'Process'", accept_multiple_files=True, type=['docx'])
+    docs = st.file_uploader(
+        "Upload your documents here and click on 'Process'", accept_multiple_files=True, type=['pdf', 'docx'])
     if st.button("Process"):
         with st.spinner("Processing"):
+            pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
+            docx_docs = [doc for doc in docs if doc.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
             # get pdf text
             raw_text = get_pdf_text(pdf_docs)
             # get docx text
@@ -135,6 +134,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
 
 
 
