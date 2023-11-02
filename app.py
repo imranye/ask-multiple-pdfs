@@ -88,7 +88,7 @@ def main():
                        page_icon=":books:")
     st.markdown(css, unsafe_allow_html=True)
     st.write(css, unsafe_allow_html=True)
-    
+    st.image("./logo.svg", use_column_width=True)    
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
