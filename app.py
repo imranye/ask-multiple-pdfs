@@ -102,9 +102,9 @@ def main():
     # if not st.session_state.processed:
     #     st.write("Please upload a document to get started.")
 
-    st.subheader("Your documents")
+
     docs = st.file_uploader(
-        "Upload your documents here and click on 'Process'", accept_multiple_files=True, type=['pdf', 'docx'])
+        "Upload Documents for Review & Analysis", accept_multiple_files=True, type=['pdf', 'docx'])
     if st.button("Process"):
         with st.spinner("Processing"):
             pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
