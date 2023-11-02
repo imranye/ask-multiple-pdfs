@@ -82,13 +82,26 @@ def handle_userinput(user_question):
                 st.write(f"Source: {message.metadata['source']}")
 
 
+def center_image(image_path):
+    col1, col2, col3 = st.columns([1,2,1])
+
+    with col1:
+        st.write("")
+
+    with col2:
+        st.image(image_path, width=300)
+
+    with col3:
+        st.write("")
+
 def main():
     load_dotenv()
     st.set_page_config(page_title="WNJ-GPT",
                        page_icon=":books:")
     st.markdown(css, unsafe_allow_html=True)
     st.write(css, unsafe_allow_html=True)
-    st.image("./logo.svg", use_column_width=True)    
+    center_image("./logo.png")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -97,7 +110,7 @@ def main():
     if "processed" not in st.session_state:
         st.session_state.processed = False
 
-    st.markdown("<h1 style='text-align: center;'>WNJ-GPT</h1>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>WNJ-GPT</h2>", unsafe_allow_html=True)
     
     # if not st.session_state.processed:
     #     st.write("Please upload a document to get started.")
