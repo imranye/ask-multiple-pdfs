@@ -102,9 +102,16 @@ def main():
     # if not st.session_state.processed:
     #     st.write("Please upload a document to get started.")
 
-
-    docs = st.file_uploader(
-        "<h2 style='text-align: center;'> Upload Documents for Review & Analysis </h2>", accept_multiple_files=True, type=['pdf', 'docx'])
+    st.markdown("<h4 style='text-align: center;'> Upload Documents for Review & Analysis </h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+    .stFileUploader > div:first-child {
+        background-color: blue;
+        color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    docs = st.file_uploader(" ", accept_multiple_files=True, type=['pdf', 'docx'])
     if st.button("Process"):
         with st.spinner("Processing"):
             pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
