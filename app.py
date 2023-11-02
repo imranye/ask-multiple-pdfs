@@ -97,14 +97,14 @@ def main():
     if "processed" not in st.session_state:
         st.session_state.processed = False
 
-    st.header("WNJ-GPT")
+    st.markdown("<h1 style='text-align: center;'>WNJ-GPT</h1>", unsafe_allow_html=True)
     
     # if not st.session_state.processed:
     #     st.write("Please upload a document to get started.")
 
 
     docs = st.file_uploader(
-        "Upload Documents for Review & Analysis", accept_multiple_files=True, type=['pdf', 'docx'])
+        "<h2 style='text-align: center;'> Upload Documents for Review & Analysis </h2>", accept_multiple_files=True, type=['pdf', 'docx'])
     if st.button("Process"):
         with st.spinner("Processing"):
             pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
