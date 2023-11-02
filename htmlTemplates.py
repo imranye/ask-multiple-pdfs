@@ -44,3 +44,14 @@ user_template = '''
     <div class="message">{{MSG}}</div>
 </div>
 '''
+css += '''
+body {undefined    background-color: #F3EAEA;
+}
+'''
+
+css += '''
+input[type="text"], textarea, .stFileUploader button {
+    background-color: #18223C;
+    color: #F3EAEA;  /* Change text color to contrast with background */
+}
+'''
