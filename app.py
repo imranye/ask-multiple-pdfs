@@ -1,8 +1,10 @@
 import os
+import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from docx import Document
+from openpyxl import load_workbook
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
@@ -30,9 +32,19 @@ def get_pdf_text(pdf_docs):
             text += page.extract_text()
     return text
 
+def get_excel_text(excel_files):
+    text = ""
+    for excel in excel_files:
+        wb = load_workbook(excel)
+        for sheet in wb.sheetnames:
+            df = pd.read_excel(excel, sheet_name=sheet)
+            text += df.to_string()
+    return text
+
 def upload_files():
     doc_files = st.file_uploader("Upload DOCX", type=['docx', 'docx'], accept_multiple_files=True)
-    return doc_files, pdf_docs
+    excel_files = st.file_uploader("Upload Excel", type=['xlsx', 'xls'], accept_multiple_files=True)
+    return doc_files, excel_files, pdf_docs
 
 def get_text_chunks(text):
     text_splitter = CharacterTextSplitter(
@@ -124,15 +136,18 @@ def main():
     }
     </style>
     """, unsafe_allow_html=True)
-    docs = st.file_uploader(" ", accept_multiple_files=True, type=['pdf', 'docx'])
+    docs = st.file_uploader(" ", accept_multiple_files=True, type=['pdf', 'docx', 'xlsx', 'xls'])
     if st.button("Process"):
         with st.spinner("Processing"):
             pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
             docx_docs = [doc for doc in docs if doc.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+            excel_docs = [doc for doc in docs if doc.type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
             # get pdf text
             raw_text = get_pdf_text(pdf_docs)
             # get docx text
             raw_text += get_doc_text(docx_docs)
+            # get excel text
+            raw_text += get_excel_text(excel_docs)
 
             # get the text chunks
             text_chunks = get_text_chunks(raw_text)
