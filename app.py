@@ -41,6 +41,13 @@ def get_excel_text(excel_files):
             text += df.to_string()
     return text
 
+def get_csv_text(csv_files):
+    text = ""
+    for csv_file in csv_files:
+        df = pd.read_csv(csv_file)
+        text += df.to_string()
+    return text
+
 def upload_files():
     doc_files = st.file_uploader("Upload DOCX", type=['docx', 'docx'], accept_multiple_files=True)
     excel_files = st.file_uploader("Upload Excel", type=['xlsx', 'xls'], accept_multiple_files=True)
@@ -142,13 +149,15 @@ def main():
             pdf_docs = [doc for doc in docs if doc.type == 'application/pdf']
             docx_docs = [doc for doc in docs if doc.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
             excel_docs = [doc for doc in docs if doc.type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+            csv_docs = [doc for doc in docs if doc.type == 'text/csv']
             # get pdf text
             raw_text = get_pdf_text(pdf_docs)
             # get docx text
             raw_text += get_doc_text(docx_docs)
             # get excel text
             raw_text += get_excel_text(excel_docs)
-
+            # get tabular data text
+            raw_text += get_csv_text(csv_docs)
             # get the text chunks
             text_chunks = get_text_chunks(raw_text)
 
