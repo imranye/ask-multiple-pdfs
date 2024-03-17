@@ -107,6 +107,14 @@ def center_image(image_path):
         st.write("")
 
 def main():
+
+    prebuilt_questions = [
+        "Select a question...",
+        "What is the process for...",
+        "How do I calculate...",
+        "Where can I find information about...",
+        # Add more prebuilt questions as needed
+    ]
     load_dotenv()
     st.set_page_config(page_title="WNJ-GPT",
                        page_icon=":books:")
@@ -165,14 +173,12 @@ def main():
     # Check processed flag and display confirmation message
     if st.session_state.processed:
         st.success("Documents uploaded successfully! ✅")
-        user_question = st.text_input("Ask a question about your documents:")
+        question_options = ["Select a question", "What is the main topic?", "Provide a summary.", "Highlight any discrepancies."]
+        selected_question = st.selectbox("Choose a question to ask about your documents:", question_options)
+        user_question = st.text_input("Ask a question about your documents:", value=selected_question if selected_question != "Select a question" else "")
         if st.button("Submit") or user_question:
             handle_userinput(user_question)
 
 if __name__ == '__main__':
     main()
-
-
-
-
 
